@@ -70,7 +70,7 @@ div {
   @include box-shadow(0px, 0px, 4px, #fff);
 }
 ```
-
+---
 ## Logic in SASS
 
 ### If, else
@@ -132,7 +132,7 @@ $x: 1;
 ```
 First, define a variable $x and set it to 1. Next, use the @while directive to create the grid system while $x is less than 13. After setting the CSS rule for width, $x is incremented by 1 to avoid an infinite loop.
 
-
+---
 ## Partials
 Partials in Sass are separate files that hold segments of CSS code. These are imported and used in other Sass files. This is a great way to group similar code into a module to keep it organized.
 
@@ -146,6 +146,7 @@ For example, if all your mixins are saved in a partial named "_mixins.scss", and
 
 Note that the underscore and file extension are not needed in the import statement - Sass understands it is a partial. Once a partial is imported into a file, all variables, mixins, and other code are available to use.
 
+---
 ## Extend
 Sass has a feature called extend that makes it easy to borrow the CSS rules from one element and build upon them in another.
 
@@ -161,4 +162,3 @@ Sass has a feature called extend that makes it easy to borrow the CSS rules from
     background-color: magenta;
   }
 ```
-
