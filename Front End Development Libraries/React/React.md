@@ -296,16 +296,478 @@ class ToDo extends React.Component {
   }
 };
 ```
+---
+## Use Default Props
+You can assign default props to a component as a property on the component itself and React assigns the default prop if necessary. This allows you to specify what a prop value should be if no value is explicitly provided.
 
+```JSX
+const ShoppingCart = (props) => {
+  return (
+    <div>
+      <h1>Shopping Cart Component</h1>
+    </div>
+  )
+};
+ShoppingCart.defaultProps = { items: 0}
+```
 
+---
+## Override Default Props
+The way to override the default props is to explicitly set the prop values for a component.
 
+```JSX
+const Items = (props) => {
+  return <h1>Current Quantity of Items in Cart: {props.quantity}</h1>
+}
+
+Items.defaultProps = {
+  quantity: 0
+}
+
+class ShoppingCart extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+
+    return <Items quantity={10}/>
+  }
+};
 ```
+
+---
+## Use PropTypes to Define the Props You Expect
+It's considered a best practice to set propTypes when you know the type of a prop ahead of time. You can define a propTypes property for a component in the same way you defined defaultProps. Doing this will check that props of a given key are present with a given type.
+  
+```JSX
+const Items = (props) => {
+  return <h1>Current Quantity of Items in Cart: {props.quantity}</h1>
+};
+
+Items.propTypes = { quantity: PropTypes.number.isRequired}
+
+Items.defaultProps = {
+  quantity: 0
+};
+
+class ShoppingCart extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return <Items />
+  }
+};
 ```
+
+---
+## Access Props Using this.props
+The ES6 class component uses a slightly different convention to access props.
+
+Anytime you refer to a class component within itself, you use the this keyword. To access props within a class component, you preface the code that you use to access it with this. For example, if an ES6 class component has a prop called data, you write {this.props.data} in JSX.
+  
+```JSX
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+  }
+  render() {
+    return (
+        <div>
+
+            <Welcome name='Elisa'/>
+
+        </div>
+    );
+  }
+};
+
+class Welcome extends React.Component {
+  constructor(props) {
+    super(props);
+
+  }
+  render() {
+    return (
+        <div>
+
+          <p>Hello, <strong>{this.props.name}</strong>!</p>
+
+        </div>
+    );
+  }
+};
 ```
+
+---
+## Review Using Props with Stateless Functional Components
+A stateless functional component is any function you write which accepts props and returns JSX.
+
+A stateless component, on the other hand, is a class that extends React.Component, but does not use internal state. 
+
+A stateful component is a class component that does maintain its own internal state. You may see stateful components referred to simply as components or React components.
+
+---
+## Create a Stateful Component
+State consists of any data your application needs to know about, that can change over time. You want your apps to respond to state changes and present an updated UI when necessary. React offers a nice solution for the state management of modern web applications.
+
+You create state in a React component by declaring a state property on the component class in its constructor. This initializes the component with state when it is created. The state property must be set to a JavaScript object.
+  
+```JSX
+class StatefulComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      firstName: 'aaron'
+    }
+  }
+  render() {
+    return (
+      <div>
+        <h1>{this.state.firstName}</h1>
+      </div>
+    );
+  }
+};
 ```
+You have access to the state object throughout the life of your component. You can update it, render it in your UI, and pass it as props to child components.
+
+---
+## Render State in the User Interface
+f a component is stateful, it will always have access to the data in state in its render() method. You can access the data with this.state.
+
+If you want to access a state value within the return of the render method, you have to enclose the value in curly braces.
+
+React updates the actual DOM, but only where necessary. This means you don't have to worry about changing the DOM.
+
+State is completely encapsulated, or local to that component, unless you pass state data to a child component as props.
+
+---
+## Render State in the User Interface Another Way
+In the render() method, before the return statement, you can write JavaScript directly. For example, you could declare functions, access data from state or props, perform computations on this data, and so on. Then, you can assign any data to variables, which you have access to in the return statement.
+  
+```JSX
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: 'freeCodeCamp'
+    }
+  }
+  render() {
+    const name = this.state.name;
+    return (
+      <div>
+        <h1>{name}</h1>
+      </div>
+    );
+  }
+};
 ```
+
+---
+## Set State with this.setState
+React provides a method for updating component state called setState. You call the setState method within your component class like so: this.setState(), passing in an object with key-value pairs. The keys are your state properties and the values are the updated state data.
+
+```JSX
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: 'Initial State'
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    this.setState({name :'React Rocks!'});
+  }
+  render() {
+    return (
+      <div>
+        <button onClick={this.handleClick}>Click Me</button>
+        <h1>{this.state.name}</h1>
+      </div>
+    );
+  }
+};
 ```
+
+---
+## Bind 'this' to a Class Method
+A class method typically needs to use the this keyword so it can access properties on the class (such as state and props) inside the scope of the method.
+
+One common way is to explicitly bind this in the constructor so this becomes bound to the class methods when the component is initialized. Then, when you call a function like this.setState() within your class method, this refers to the class and will not be undefined.
+
+```JSX
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: "Hello"
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    this.setState({
+      text: "You clicked!"
+    });
+  }
+  render() {
+    return (
+      <div>
+        <button onClick={this.handleClick}>Click Me</button>
+        <h1>{this.state.text}</h1>
+      </div>
+    );
+  }
+};
 ```
+
+---
+## Use State to Toggle an Element
+Instead, you should pass setState a function that allows you to access state and props. Using a function with setState guarantees you are working with the most current values of state and props. 
+
+```JSX
+this.setState((state, props) => ({
+  counter: state.counter + props.increment
+}));
+
+//You can also use a form without props if you need only the state
+this.setState(state => ({
+  counter: state.counter + 1
+}));
+
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      visibility: false
+    };
+    this.toggleVisibility =  this.toggleVisibility.bind(this);
+  }
+  toggleVisibility(){
+    this.setState(state => ({
+      visibility: !state.visibility
+    }));
+  }
+  render() {
+    if (this.state.visibility) {
+      return (
+        <div>
+          <button onClick={this.toggleVisibility}>Click Me</button>
+          <h1>Now you see me!</h1>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <button onClick={this.toggleVisibility}>Click Me</button>
+        </div>
+      );
+    }
+  }
+}
+```
+
+---
+## Simple Counter
+```JSX
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      count: 0
+    };
+    this.increment = this.increment.bind(this);
+    this.decrement = this.decrement.bind(this);
+    this.reset = this.reset.bind(this);
+  }
+  increment(){
+    this.setState(state => ({
+      count: state.count + 1
+    }));
+  }
+  decrement(){
+    this.setState(state => ({
+      count: state.count - 1
+    }));
+  }
+  reset(){
+    this.setState(state =>({
+      count: 0
+    }));
+  }
+
+  render() {
+    return (
+      <div>
+        <button className='inc' onClick={this.increment}>Increment!</button>
+        <button className='dec' onClick={this.decrement}>Decrement!</button>
+        <button className='reset' onClick={this.reset}>Reset</button>
+        <h1>Current Count: {this.state.count}</h1>
+      </div>
+    );
+  }
+};
+```
+
+---
+## Controlled Input
+```JSX
+class ControlledInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      input: ''
+    };
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(event){
+    this.setState(state => ({
+      input: event.target.value
+    }));
+  }
+  render() {
+    return (
+      <div>
+        <input value={this.state.input} onChange={this.handleChange}></input>
+        <h4>Controlled Input:</h4>
+        <p>{this.state.input}</p>
+      </div>
+    );
+  }
+};
+```
+
+---
+## Controlled Form
+```JSX
+class MyForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      input: '',
+      submit: ''
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleChange(event) {
+    this.setState({
+      input: event.target.value
+    });
+  }
+  handleSubmit(event) {
+    event.preventDefault();
+    this.setState(state => ({
+      submit: state.input
+    }));
+  }
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input value={this.state.input} onChange={this.handleChange}></input>
+          <button type='submit'>Submit!</button>
+        </form>
+        <h1>{this.state.submit}</h1>
+      </div>
+    );
+  }
+}
+```
+
+---
+## Pass State as Props to Child Components
+You can pass state as props to child components.
+```JSX
+class MyApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: 'CamperBot'
+    }
+  }
+  render() {
+    return (
+       <div>
+         <Navbar name={this.state.name}/>
+       </div>
+    );
+  }
+};
+
+class Navbar extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+    <div>
+      <h1>Hello, my name is: {this.props.name}</h1>
+    </div>
+    );
+  }
+};
+```
+
+---
+## Pass a Callback as Props
+You can also pass handler functions or any method that's defined on a React component to a child component.
+```JSX
+class MyApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      inputValue: ''
+    }
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(event) {
+    this.setState({
+      inputValue: event.target.value
+    });
+  }
+  render() {
+    return (
+       <div>
+        <GetInput input={this.state.inputValue} handleChange={this.handleChange}/>
+        <RenderInput input={this.state.inputValue}/>
+       </div>
+    );
+  }
+};
+
+class GetInput extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        <h3>Get Input:</h3>
+        <input
+          value={this.props.input}
+          onChange={this.props.handleChange}/>
+      </div>
+    );
+  }
+};
+
+class RenderInput extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return (
+      <div>
+        <h3>Input Render:</h3>
+        <p>{this.props.input}</p>
+      </div>
+    );
+  }
+};
 ```
 ```
 ```
